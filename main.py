@@ -42,10 +42,11 @@ async def on_message(message):
     if message.author == client.user:
         return
     if message.content.startswith("$news_BBC"):
-        await message.channel.send("読み込み中...")
+        loading_msg = await message.channel.send("読み込み中...")
         news = await news_scrap()
         formatted_news = "\n".join(
             [n.replace('[', '').replace(']', '') for n in news])
+        loading_msg.delete()
         await message.channel.send(formatted_news)
     elif message.content.startswith('$hello'):
         await message.channel.send('Hello!')
