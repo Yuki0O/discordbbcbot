@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import json
 import os
 
@@ -28,6 +30,13 @@ class ApplicationSettings:
                 f"See {SETTINGS_JSON_PATH}.")
 
         return self.settings_dict['discord']['token']
+
+    def overwrite_settings(self, new_settings: ApplicationSettings) -> None:
+        self.__settings_dict = new_settings.settings_dict
+
+    def save(self) -> None:
+        with open(self.__json_path, mode='w') as f:
+            json.dump(self.__settings_dict, f, indent=JSON_INDENT)
 
 
 class ApplicationSettingsHandler:
