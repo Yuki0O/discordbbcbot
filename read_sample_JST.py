@@ -17,12 +17,14 @@ async def news_scrap_JST() -> list[str]:
     choiced_article = article_links[random_num]
     #html_title = choiced_article.contents[0]
     title_soup = BeautifulSoup(str(choiced_article), 'html.parser')
-    article_title = title_soup.find("h3")
+    article_title = title_soup.find("h3").get_text()
     article_url = tops + choiced_article.attrs['href']
     titles_urls.append(f'{article_title},\n{article_url}')
     return titles_urls
 
 async def main():
     prt = await news_scrap_JST()
-    print(prt)
+    formatted_news = "\n".join(
+        [n.replace('[', '').replace(']', '') for n in prt])
+    print(formatted_news)
 asyncio.run(main())
