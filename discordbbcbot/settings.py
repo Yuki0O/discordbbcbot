@@ -1,20 +1,27 @@
 import json
 import os
-from typing import Any, Dict
 
 from .constants import SETTINGS_JSON_PATH
-from .defaultsettings import DEFAULT_SETTINGS
+from .defaultsettings import DEFAULT_SETTINGS, SettingsDict
 
 JSON_INDENT = 4
 
 
 class ApplicationSettings:
-    """Class for storing SMD Converter configuration values
+    """Class for storing discordbbcbot configuration values
     """
 
-    def __init__(self, settings_dict: Dict[str, Any], json_path: str) -> None:
+    def __init__(self, settings_dict: SettingsDict, json_path: str) -> None:
         self.__settings_dict = settings_dict
         self.__json_path = json_path
+
+    @property
+    def settings_dict(self) -> SettingsDict:
+        return self.__settings_dict
+
+    @property
+    def discord_token(self) -> str:
+        return self.settings_dict['discord']['token']
 
 
 class ApplicationSettingsHandler:
