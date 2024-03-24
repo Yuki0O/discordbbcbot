@@ -30,23 +30,21 @@ async def news_scrap_BBC() -> list[str]:
     return titles_urls
 
 async def news_scrap_JST() -> list[str]:
-    url = "https://scienceportal.jst.go.jp/index.html"
+    url = "https://scienceportal.jst.go.jp/newsflash/"
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as res:
             soup = BeautifulSoup(await res.text(), 'html.parser')
     article_links = soup.find_all(href=re.compile(
-        "index"), limit=10)
-    tops = ""
+        "index"), limit=11)
+    tops = "https://scienceportal.jst.go.jp/newsflash/"
     titles_urls = []
-    random_num = random.randint(0, 9)
+    random_num = random.randint(1, 10)
     choiced_article = article_links[random_num]
-    html_title = choiced_article.contents[0]
-    title_soup = BeautifulSoup(str(html_title), 'html.parser')
-    article_title = title_soup.get_text()
+    #html_title = choiced_article.contents[0]
+    title_soup = BeautifulSoup(str(choiced_article), 'html.parser')
+    article_title = title_soup.find("h3")
     article_url = tops + choiced_article.attrs['href']
-    translator = Translator()
-    translated = translator.translate(article_title, dest="ja").text
-    titles_urls.append(f'{article_title},\n{translated},\n{article_url}')
+    titles_urls.append(f'{article_title},\n{article_url}')
     return titles_urls
 
 intents = discord.Intents.default()
@@ -67,6 +65,13 @@ async def on_message(message: discord.Message) -> None:
     if message.content.startswith("$news_BBC"):
         loading_msg = await message.channel.send("読み込み中...")
         news = await news_scrap_BBC()
+        formatted_news = "\n".join(
+            [n.replace('[', '').replace(']', '') for n in news])
+        await loading_msg.delete()
+        await message.channel.send(formatted_news)
+    if message.content.startswith("$news_JST"):
+        loading_msg = await message.channel.send("読み込み中...")
+        news = await news_scrap_JST()
         formatted_news = "\n".join(
             [n.replace('[', '').replace(']', '') for n in news])
         await loading_msg.delete()
