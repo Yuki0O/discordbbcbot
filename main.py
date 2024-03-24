@@ -1,9 +1,12 @@
-import aiohttp
-from bs4 import BeautifulSoup
 import random
-import discord
 import re
+
+import aiohttp
+import discord
+from bs4 import BeautifulSoup
 from googletrans import Translator
+
+from discordbbcbot.settings import ApplicationSettingsHandler
 
 
 async def news_scrap():
@@ -51,4 +54,9 @@ async def on_message(message):
     elif message.content.startswith('$hello'):
         await message.channel.send('Hello!')
 
-client.run("TOKEN")
+
+if __name__ == "__main__":
+    settings_handler = ApplicationSettingsHandler()
+    settings = settings_handler.load()
+
+    client.run(settings.discord_token)
