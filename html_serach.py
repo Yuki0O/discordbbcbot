@@ -8,9 +8,9 @@ async def news_data(url):
         async with session.get(url) as res:
             article_html = await res.text()
             soup = BeautifulSoup(article_html, 'html.parser')
-            body_element = soup.find_all("b")
-            if body_element:   
-                return str(body_element)
+            elem = soup.find_all("b")
+            if elem:   
+                return str(elem)
             else:
                 return "No body"
             
