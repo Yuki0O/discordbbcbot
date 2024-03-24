@@ -21,6 +21,12 @@ class ApplicationSettings:
 
     @property
     def discord_token(self) -> str:
+        res = self.settings_dict['discord']['token']
+        if res == DEFAULT_SETTINGS['discord']['token']:
+            raise ValueError(
+                "Token for discord is not configured. "
+                f"See {SETTINGS_JSON_PATH}.")
+
         return self.settings_dict['discord']['token']
 
 

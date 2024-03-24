@@ -1,4 +1,5 @@
 from discordbbcbot.settings import ApplicationSettingsHandler
 
 handler = ApplicationSettingsHandler()
-handler.load()
+settings = handler.load()
+print(settings.discord_token)
