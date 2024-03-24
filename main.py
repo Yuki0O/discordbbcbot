@@ -11,19 +11,22 @@ async def news_scrap():
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as res:
             soup = BeautifulSoup(await res.text(), 'html.parser')
-    article_links = soup.find_all(href=re.compile(
-        "/news/science-environment"), limit=10)
-    BBC = "https://www.bbc.com"
-    titles_urls = []
-    random_num = random.randint(0, 9)
-    choiced_article = article_links[random_num]
-    html_title = choiced_article.contents[0]
-    title_soup = BeautifulSoup(str(html_title), 'html.parser')
-    article_title = title_soup.get_text()
-    article_url = BBC + choiced_article.attrs['href']
-    translator = Translator()
-    translated = translator.translate(article_title, dest="ja").text
-    titles_urls.append(f'{article_title},\n{translated},\n{article_url}')
+        article_links = soup.find_all(href=re.compile(
+            "/news/science-environment"), limit=10)
+        BBC = "https://www.bbc.com"
+        titles_urls = []
+        random_num = random.randint(0, 9)
+        choiced_article = article_links[random_num]
+        html_title = choiced_article.contents[0]
+        title_soup = BeautifulSoup(str(html_title), 'html.parser')
+        article_title = title_soup.get_text()
+        article_url = BBC + choiced_article.attrs['href']
+        #async with session.get(article_url) as article_res:
+            #article_soup = BeautifulSoup(await article_url.text(), 'html.parser')
+        
+        translator = Translator()
+        translated = translator.translate(article_title, dest="ja").text
+        titles_urls.append(f'{article_title},\n{translated},\n{article_url}')
     return titles_urls
 
 intents = discord.Intents.default()
