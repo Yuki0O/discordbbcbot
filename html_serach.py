@@ -1,7 +1,6 @@
 import aiohttp
 from bs4 import BeautifulSoup
 import asyncio
-import re
 
 async def news_data(url):
     async with aiohttp.ClientSession() as session:
@@ -13,10 +12,8 @@ async def news_data(url):
                 return str(elem)
             else:
                 return "No body"
-            
 async def main():
     article_url = "https://www.bbc.com/news/science-environment-68110310"
     body_search = await news_data(article_url)
-    print (body_search)
-
+    print(body_search)
 asyncio.run(main())
