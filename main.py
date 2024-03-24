@@ -9,7 +9,7 @@ from googletrans import Translator
 from discordbbcbot.settings import ApplicationSettingsHandler
 
 
-async def news_scrap():
+async def news_scrap() -> list[str]:
     url = "https://www.bbc.com/news/science_and_environment"
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as res:
@@ -36,12 +36,12 @@ client = discord.Client(intents=intents)
 
 
 @client.event
-async def on_ready():
+async def on_ready() -> None:
     print(f'We have logged in as {client.user}')
 
 
 @client.event
-async def on_message(message):
+async def on_message(message: discord.Message) -> None:
     if message.author == client.user:
         return
     if message.content.startswith("$news_BBC"):
@@ -49,7 +49,7 @@ async def on_message(message):
         news = await news_scrap()
         formatted_news = "\n".join(
             [n.replace('[', '').replace(']', '') for n in news])
-        loading_msg.delete()
+        await loading_msg.delete()
         await message.channel.send(formatted_news)
     elif message.content.startswith('$hello'):
         await message.channel.send('Hello!')
