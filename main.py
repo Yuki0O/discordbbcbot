@@ -46,6 +46,24 @@ async def news_scrap_JST() -> list[str]:
     titles_urls.append(f'{article_title},\n{article_url}')
     return titles_urls
 
+async def news_scrap_NGG() -> list[str]:
+    url = "https://natgeo.nikkeibp.co.jp/nng/news/genre_science.shtml"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as res:
+            soup = BeautifulSoup(await res.text(), 'html.parser')
+    article_links = soup.find_all(class_=["firstPageFirstItem FREE","firstPageBorderItem ","FREE"], limit=11)
+    tops = "https://natgeo.nikkeibp.co.jp/"
+    titles_urls = []
+    random_num = random.randint(0, 9)
+    choiced_article = article_links[random_num]
+    article_soup = BeautifulSoup(str(choiced_article), 'html.parser')
+    article_title = article_soup.find('h3').get_text()
+    article_absts = article_soup.find('p').get_text()
+    article_url = tops + article_soup.find('a')['href']
+    #article_url = tops + article_soup.find(href=re.compile("atcl")).get_text()
+    titles_urls.append(f'『{article_title}』\n{article_absts}\n{article_url}')
+    return titles_urls
+
 intents = discord.Intents.default()
 intents.message_content = True
 
@@ -71,6 +89,13 @@ async def on_message(message: discord.Message) -> None:
     if message.content.startswith("$news_JST"):
         loading_msg = await message.channel.send("読み込み中...")
         news = await news_scrap_JST()
+        formatted_news = "\n".join(
+            [n.replace('[', '').replace(']', '') for n in news])
+        await loading_msg.delete()
+        await message.channel.send(formatted_news)
+    if message.content.startswith("$news_NGG"):
+        loading_msg = await message.channel.send("読み込み中...")
+        news = await news_scrap_NGG()
         formatted_news = "\n".join(
             [n.replace('[', '').replace(']', '') for n in news])
         await loading_msg.delete()
