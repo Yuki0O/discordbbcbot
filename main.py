@@ -29,6 +29,7 @@ async def news_scrap_BBC() -> list[str]:
     titles_urls.append(f'{article_title},\n{translated},\n{article_url}')
     return titles_urls
 
+
 async def news_scrap_JST() -> list[str]:
     url = "https://scienceportal.jst.go.jp/newsflash/"
     async with aiohttp.ClientSession() as session:
@@ -45,6 +46,7 @@ async def news_scrap_JST() -> list[str]:
     article_url = tops + choiced_article.attrs['href']
     titles_urls.append(f'{article_title},\n{article_url}')
     return titles_urls
+
 
 async def news_scrap_NGG() -> list[str]:
     url = "https://natgeo.nikkeibp.co.jp/nng/news/genre_science.shtml"
@@ -87,7 +89,7 @@ async def news_send(source: str, message: discord.Message):
     elif source == "NGG":
         news = await news_scrap_NGG()
     formatted_news = "\n".join(
-            [n.replace('[', '').replace(']', '') for n in news])
+        [n.replace('[', '').replace(']', '') for n in news])
     await loading_msg.delete()
     await message.channel.send(formatted_news)
 
@@ -97,14 +99,14 @@ async def on_message(message: discord.Message):
     if message.author == client.user:
         return
     if message.content.startswith("$news_BBC"):
-        await news_send("BBC",message)
+        await news_send("BBC", message)
     if message.content.startswith("$news_JST"):
-        await news_send("JST",message)
+        await news_send("JST", message)
     if message.content.startswith("$news_NGG"):
-        await news_send("NGG",message)
+        await news_send("NGG", message)
     if message.content.startswith("$news_RAND"):
-        random_source = random.choice(["BBC","JST","NGG"])
-        await news_send(random_source,message)
+        random_source = random.choice(["BBC", "JST", "NGG"])
+        await news_send(random_source, message)
     elif message.content.startswith('$hello'):
         await message.channel.send('Hello!')
 
