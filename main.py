@@ -78,6 +78,37 @@ async def on_ready() -> None:
 
 
 @client.event
+async def news_send(source: str, message: discord.Message):
+    loading_msg = await message.channel.send("読込中")
+    if source == "BBC":
+        news = await news_scrap_BBC()
+    elif source == "JST":
+        news = await news_scrap_JST()
+    elif source == "NGG":
+        news = await news_scrap_NGG()
+    formatted_news = "\n".join(
+            [n.replace('[', '').replace(']', '') for n in news])
+    await loading_msg.delete()
+    await message.channel.send(formatted_news)
+
+
+@client.event
+async def on_message(message: discord.Message):
+    if message.author == client.user:
+        return
+    if message.content.startswith("$news_BBC"):
+        await news_send("BBC",message)
+    if message.content.startswith("$news_JST"):
+        await news_send("JST",message)
+    if message.content.startswith("$news_NGG"):
+        await news_send("NGG",message)
+    if message.content.startswith("$news_RAND"):
+        random_source = random.choice(["BBC","JST","NGG"])
+        await news_send(random_source,message)
+    elif message.content.startswith('$hello'):
+        await message.channel.send('Hello!')
+
+""" @client.event
 async def on_message(message: discord.Message) -> None:
     if message.author == client.user:
         return
@@ -103,7 +134,7 @@ async def on_message(message: discord.Message) -> None:
         await loading_msg.delete()
         await message.channel.send(formatted_news)
     elif message.content.startswith('$hello'):
-        await message.channel.send('Hello!')
+        await message.channel.send('Hello!') """
 
 
 if __name__ == "__main__":
