@@ -108,34 +108,6 @@ async def on_message(message: discord.Message):
     elif message.content.startswith('$hello'):
         await message.channel.send('Hello!')
 
-""" @client.event
-async def on_message(message: discord.Message) -> None:
-    if message.author == client.user:
-        return
-    if message.content.startswith("$news_BBC"):
-        loading_msg = await message.channel.send("読み込み中...")
-        news = await news_scrap_BBC()
-        formatted_news = "\n".join(
-            [n.replace('[', '').replace(']', '') for n in news])
-        await loading_msg.delete()
-        await message.channel.send(formatted_news)
-    if message.content.startswith("$news_JST"):
-        loading_msg = await message.channel.send("読み込み中...")
-        news = await news_scrap_JST()
-        formatted_news = "\n".join(
-            [n.replace('[', '').replace(']', '') for n in news])
-        await loading_msg.delete()
-        await message.channel.send(formatted_news)
-    if message.content.startswith("$news_NGG"):
-        loading_msg = await message.channel.send("読み込み中...")
-        news = await news_scrap_NGG()
-        formatted_news = "\n".join(
-            [n.replace('[', '').replace(']', '') for n in news])
-        await loading_msg.delete()
-        await message.channel.send(formatted_news)
-    elif message.content.startswith('$hello'):
-        await message.channel.send('Hello!') """
-
 
 if __name__ == "__main__":
     settings_handler = ApplicationSettingsHandler()
